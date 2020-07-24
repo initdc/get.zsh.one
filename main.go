@@ -36,13 +36,13 @@ func main() {
 		}
 	})
 
-	router.GET("/rc", func(d *gin.Context) {
-		d.File("sh/.zshrc")
-	})
+	//router.GET("/rc", func(d *gin.Context) {
+	//	d.File("sh/.zshrc")
+	//})
 
-	router.GET("/favicon.ico", func(e *gin.Context) {
-		e.File("favicon.ico")
-	})
+
+	router.StaticFile("/favicon.ico", "./favicon.png")
+	router.StaticFile("/rc", "./sh/.zshrc")
 
 	router.Run(":" + port)
 }
