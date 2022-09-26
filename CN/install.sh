@@ -2,7 +2,7 @@
 
 set -e
 
-# run with: curl -L get.zsh.one | sh
+# run with: curl -L get-cn.zsh.one | sh
 # src at: https://github.com/initdc/get.zsh.one
 
 command_exists() {
@@ -19,10 +19,19 @@ file_exists() {
 
 zplug_installer() {
     if dir_exists $HOME/.zplug; then
-        cd $HOME/.zplug && git pull origin master
+        cd $HOME/.zplug
+        git remote set-url origin https://jihulab.com/mirr/zplug
+        git pull origin feat/jihulab
+        git checkout feat/jihulab
         return
     fi
-    git clone https://github.com/zplug/zplug $HOME/.zplug
+    git clone https://jihulab.com/mirr/zplug -b feat/jihulab $HOME/.zplug
+}
+
+omz_installer() {
+    mkdir -p $HOME/.zplug/repos/robbyrussell
+    git clone https://jihulab.com/mirr/ohmyzsh $HOME/.zplug/repos/oh-my-zsh
+    cp -ap $HOME/.zplug/repos/oh-my-zsh $HOME/.zplug/repos/robbyrussell/oh-my-zsh
 }
 
 zshrc_writer() {
@@ -35,12 +44,12 @@ zshrc_writer() {
         mv $HOME/.zshrc $HOME/$new_name
     fi
     echo > $HOME/.zshrc 'source ~/.zplug/init.zsh
-zplug "zplug/zplug", hook-build:"zplug --self-manage"
+zplug "mirr/zplug", from:jihulab, at: feat/jihulab, hook-build:"zplug --self-manage"
 zplug "lib/*", from:oh-my-zsh
 zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-zplug "zsh-users/zsh-completions"
+zplug "mirr/zsh-autosuggestions", from:jihulab
+zplug "mirr/zsh-syntax-highlighting", from:jihulab, defer:2
+zplug "mirr/zsh-completions", from:jihulab
 
 if ! zplug check --verbose; then
     printf "Install? [y/N]: "
@@ -118,6 +127,7 @@ main() {
 
     zplug_installer
     zshrc_writer
+    omz_installer
     zsh
 }
 

@@ -1,40 +1,4 @@
-#!/bin/sh
-
-set -e
-
-# run with: curl -L get.zsh.one | sh
-# src at: https://github.com/initdc/get.zsh.one
-
-command_exists() {
-    command -v "$@" > /dev/null 2>&1
-}
-
-dir_exists() {
-    test -d "$@" > /dev/null 2>&1
-}
-
-file_exists() {
-    test -f "$@" > /dev/null 2>&1
-}
-
-zplug_installer() {
-    if dir_exists $HOME/.zplug; then
-        cd $HOME/.zplug && git pull origin master
-        return
-    fi
-    git clone https://github.com/zplug/zplug $HOME/.zplug
-}
-
-zshrc_writer() {
-    if file_exists $HOME/.zshrc; then
-
-        file_name=.zshrc
-        current_time=$(date "+%Y.%m.%d_%H:%M:%S")
-        new_name=$file_name"_"$current_time
-
-        mv $HOME/.zshrc $HOME/$new_name
-    fi
-    echo > $HOME/.zshrc 'source ~/.zplug/init.zsh
+source ~/.zplug/init.zsh
 zplug "zplug/zplug", hook-build:"zplug --self-manage"
 zplug "lib/*", from:oh-my-zsh
 zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
@@ -102,23 +66,3 @@ fi
 
 # for macOS user
 # export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-'
-}
-
-main() {
-    if !(command_exists zsh); then
-        echo "This script needs zsh installed to run."
-        exit 1
-    fi
-
-    if !(command_exists git); then
-        echo "This script needs git installed to run."
-        exit 1
-    fi
-
-    zplug_installer
-    zshrc_writer
-    zsh
-}
-
-main "$@"
