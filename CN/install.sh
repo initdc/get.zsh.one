@@ -44,7 +44,7 @@ zshrc_writer() {
         mv $HOME/.zshrc $HOME/$new_name
     fi
     echo > $HOME/.zshrc 'source ~/.zplug/init.zsh
-zplug "mirr/zplug", from:jihulab, at: feat/jihulab, hook-build:"zplug --self-manage"
+# zplug "mirr/zplug", from:jihulab, at: feat/jihulab, hook-build:"zplug --self-manage" # see bug: https://github.com/zplug/zplug/issues/467
 zplug "lib/*", from:oh-my-zsh
 zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
 zplug "mirr/zsh-autosuggestions", from:jihulab
